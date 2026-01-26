@@ -1,0 +1,59 @@
+name: Terraform Apply
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AWS_REGION: eu-west-2
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    defaults:
+      run:
+        working-directory: ./application
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: eu-west-2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3.1.2
+        with:
+          terraform_version: 1.11.1
+
+      - name: Checkov
+        uses: bridgecrewio/checkov-action@master
+        with:
+          framework: terraform 
+          soft_fail: true
+          output_format: cli,sarif
+          output_file_path: checkov-results-terraform.sarif
+
+      - name: Upload Checkov scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: success() || failure()
+        with:
+          sarif_file: checkov-results-terraform.sarif
+          wait-for-processing: true
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan

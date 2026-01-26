@@ -1,0 +1,14 @@
+FROM python:3.10-slim AS builder
+WORKDIR /application
+COPY . .
+FROM python:3.10-alpine
+
+RUN addgroup --system appgroup && \
+    adduser --system --ingroup appgroup --home /home/appuser appuser
+WORKDIR /application
+COPY --from=builder /application /application
+
+RUN chown -R appuser:appgroup /application
+USER appuser
+EXPOSE 3000
+CMD ["python3", "-m", "http.server", "3000"]

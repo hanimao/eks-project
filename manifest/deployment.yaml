@@ -1,0 +1,71 @@
+# ingress routes traffic based on the host header 
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    # add an annotation indicating the issuer to use.
+    cert-manager.io/cluster-issuer: issuer
+    kubernetes.io/ingress.class: "nginx"
+  name: Ingress-2048
+  namespace: app-ns
+spec:
+  rules:
+  - host: eks.hanimao.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: game-2048-service
+            port:
+              number: 80
+  tls: 
+  - hosts:
+    - eks.hanimao.com
+    secretName: game-2048-tls # < cert-manager will store the created certificate in this secret.
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: game-2048-service
+  namespace: app-ns
+spec:
+  selector:
+    app: game-2048
+  type: ClusterIP
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 3000
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: game-2048
+  namespace: app-ns
+  labels:
+    app: game-2048
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: game-2048
+  template:
+    metadata:
+      labels:
+        app: game-2048
+    spec:
+      containers:
+        - name: game-2048
+          image: "634188077338.dkr.ecr.eu-west-2.amazonaws.com/2048-game"
+          ports:
+            - containerPort: 3000
+
+
+            

@@ -1,0 +1,12 @@
+# prometheus:
+#  ingress:
+#   enabled: true
+#   ingressClassName: "nginx"
+#   annotations:
+#     cert-manager.io/cluster-issuer: "issuer"
+#   hosts:
+#     - prometheus.eks.hanimao.com
+#   tls:
+#     - hosts:
+#         - prometheus.eks.hanimao.com
+#       secretName: prometheus-tls
