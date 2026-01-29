@@ -33,7 +33,7 @@ variable "subnets" {
 variable "public_subnet_tags" {
   type = map(string)
   default = {
-    "kubernetes.io/cluster/eks-2048" = "shared"
+    "kubernetes.io/cluster/staging-eks-2048" = "shared"
     "kubernetes.io/role/elb"         = 1
   }
 }
@@ -41,7 +41,8 @@ variable "public_subnet_tags" {
 variable "private_subnet_tags" {
   type = map(string)
   default = {
-    "kubernetes.io/cluster/eks-2048"  = "shared"
+    "kubernetes.io/cluster/staging-eks-2048"  = "shared"
     "kubernetes.io/role/internal-elb" = 1
   }
 }
+

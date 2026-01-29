@@ -1,13 +1,13 @@
-provider: aws
-env: 
-- name: AWS_DEFAULT_REGION
-  value: eu-west-2
+# provider: aws
+# env: 
+# - name: AWS_DEFAULT_REGION
+#   value: eu-west-2
 
  
-  serviceAccount:
-    create: true
-    name: external-dns
+#   serviceAccount:
+#     create: true
+#     name: external-dns
 
 
-# telling external DNS is that I want you to only control this domain for now. If you see any ingress service that has this domain you can have access to it
-    domainFilters: [eks.hanimao.com]
+# # telling external DNS is that I want you to only control this domain for now. If you see any ingress service that has this domain you can have access to it
+#     domainFilters: [eks.hanimao.com]

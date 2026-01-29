@@ -90,3 +90,5 @@ terraform-doc.tar.gz
 .terraform.lock.hcl
 **/.terraform.lock.hcl
 terraform.tfvars
+
+.config 

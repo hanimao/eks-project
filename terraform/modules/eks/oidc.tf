@@ -2,6 +2,7 @@
 data "aws_caller_identity" "current" {}
 
 
+
 resource "aws_iam_openid_connect_provider" "github" {
   url = "https://token.actions.githubusercontent.com"
 
@@ -69,10 +70,10 @@ resource "aws_iam_policy" "github_actions_eks" {
           "eks:CreateNodegroup",
           "eks:DeleteNodegroup"
         ]
-        Resource = "arn:aws:eks:eu-west-2:data.aws_caller_identity.current:cluster/*"
+        Resource = "arn:aws:eks:eu-west-2:${data.aws_caller_identity.current.account_id}:cluster/*"
       },
       
-      
+
       #  IAM Role PassRole (Crucial for EKS to create the control plane and nodes)
       {
         Effect   = "Allow"
